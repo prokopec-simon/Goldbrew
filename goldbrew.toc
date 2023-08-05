@@ -1,0 +1,7 @@
+## Title: Goldbrew
+## Interface: 11302
+## Version: 1.0
+## Author: Eluff
+## Notes: 
+
+goldbrew.lua
