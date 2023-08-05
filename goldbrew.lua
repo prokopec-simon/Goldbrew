@@ -14,6 +14,9 @@ local function OnButtonClick()
         print("Item ID: " .. auction.itemID .. ", Buyout Price: " .. auction.buyoutPrice)
     end
 
+    local item = getInventoryContentsFromBagnon()
+
+    print("Item: " .. item)
 end
 
 button:SetScript("OnClick", OnButtonClick)
@@ -32,11 +35,7 @@ function splitAuctions(dataString, itemIDs)
     return auctions
 end
 
-local function has_value(tab, val)
-    for index, value in ipairs(tab) do
-        if value == val then
-            return true
-        end
-    end
-    return false
+function getInventoryContentsFromBagnon()
+    local myAddonData = BrotherBags["Ashbringer"]["Ahpeon"][0][1]
+    return myAddonData
 end
