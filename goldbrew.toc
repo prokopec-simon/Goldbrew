@@ -4,4 +4,6 @@
 ## Author: Eluff
 ## Notes: 
 
+auctionDbService.lua
+bagnonService.lua
 goldbrew.lua
