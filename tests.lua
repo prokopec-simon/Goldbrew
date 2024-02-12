@@ -165,9 +165,19 @@ for id, count in pairs(herbs_in_mock_bag) do
     print("Item ID: " .. id .. ", Count: " .. count)
 end
 
-print("Available recipes:");
-
--- Print the available recipes
 for _, recipe in ipairs(filtered_recipes) do
-    print("Can craft: " .. recipe.name)
+    print("Can craft: " .. recipe.itemId .. "-" .. recipe.name)
 end
+
+local helpers = require("helpers")
+local recipeIds = helpers.get_item_ids_from_recipes(filtered_recipes);
+local herbIds = {}
+
+for id, count in pairs(herbs_in_mock_bag) do
+    table.insert(herbIds, id)
+end
+
+print("Recipe ItemIds: " .. table.concat(recipeIds, ", "))
+print("Herb ItemIds: " .. table.concat(herbIds, ", "))
+
+print("All ids: " .. table.concat(helpers.concat_tables(recipeIds, herbIds), ", "));
