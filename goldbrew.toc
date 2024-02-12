@@ -4,6 +4,6 @@
 ## Author: Eluff
 ## Notes: 
 
-auctionDbService.lua
-bagnonService.lua
 goldbrew.lua
+bag_browser.lua
+alchemy_material_ids.lua
