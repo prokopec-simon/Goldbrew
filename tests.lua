@@ -156,6 +156,18 @@ local raw_bag_mock = bag_mock["LoneWolf"]["Eluff"]
 local clean_bag_mock = bag_browser.get_bag_contents(raw_bag_mock)
 local herbs_in_mock_bag = bag_browser.get_all_herbs_from_inventory(clean_bag_mock)
 
+local all_recipes = require("alchemy_recipes");
+local available_recipes_finder = require("available_recipes_finder");
+
+local filtered_recipes = available_recipes_finder.get_available_recipes_from_inventory(herbs_in_mock_bag, all_recipes)
+
 for id, count in pairs(herbs_in_mock_bag) do
     print("Item ID: " .. id .. ", Count: " .. count)
+end
+
+print("Available recipes:");
+
+-- Print the available recipes
+for _, recipe in ipairs(filtered_recipes) do
+    print("Can craft: " .. recipe.name)
 end
