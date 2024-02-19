@@ -1,4 +1,4 @@
-local function get_available_recipes_from_inventory(inventory, recipes)
+local function get_available_recipes_from_inventory(inventory, recipes) -- TODO returns itemId instead of item_id because of reagent json converted table, should be cleaned up
     local availableRecipes = {}
 
     -- Iterate through each recipe
