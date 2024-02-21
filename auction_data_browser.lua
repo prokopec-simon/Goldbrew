@@ -21,7 +21,7 @@ local function get_auctions_from_raw_data(auction_data, character_name, realm_na
     local data = {};
     for _, characterData in ipairs(auction_data["ah"]) do
         if characterData["char"] == char then
-            table.insert(data, 0, characterData["data"]);
+            table.insert(data, characterData["data"]);
         end
     end
     local concatenated_data = table.concat(data, "");

@@ -1,4 +1,4 @@
-local all_herb_ids = require("alchemy_material_ids")
+local alchemy_material_ids = require("static_data.alchemy_material_ids")
 
 local function get_addon_bag_data(realm, character)
     return BrotherBags[realm][character]
@@ -28,7 +28,7 @@ local function get_item_counts_by_ids(item_ids, bags_content)
             local found_item_id = tonumber(string_id)
             for _, lookup_item_id in ipairs(item_ids) do
                 if found_item_id == lookup_item_id then
-                    table.insert(item_amounts_by_id, {found_item_id, tonumber(string_amount)})
+                    table.insert(item_amounts_by_id, {tonumber(found_item_id), tonumber(string_amount)})
                     break
                 end
             end
@@ -38,8 +38,8 @@ local function get_item_counts_by_ids(item_ids, bags_content)
     local summed_item_amounts_by_id = {}
 
     for _, entry in ipairs(item_amounts_by_id) do
-        local id = entry[1]
-        local count = entry[2]
+        local id = tonumber(entry[1])
+        local count = tonumber(entry[2])
 
         if summed_item_amounts_by_id[id] then
             summed_item_amounts_by_id[id] = summed_item_amounts_by_id[id] + count
@@ -52,7 +52,7 @@ local function get_item_counts_by_ids(item_ids, bags_content)
 end
 
 local function get_all_herbs_from_inventory(bag_contents)
-    return get_item_counts_by_ids(all_herb_ids, bag_contents)
+    return get_item_counts_by_ids(alchemy_material_ids, bag_contents)
 end
 
 return {
