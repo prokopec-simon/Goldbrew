@@ -26,6 +26,17 @@ local function get_available_recipes_from_inventory(inventory, recipes) -- TODO 
     return availableRecipes
 end
 
+local function get_reagents_from_recipe_id(recipe_id, recipes)
+    for _, recipe in ipairs(recipes) do
+        if recipe.itemId == recipe_id then
+            return recipe.reagents
+        end
+    end
+
+    return nil
+end
+
 return {
-    get_available_recipes_from_inventory = get_available_recipes_from_inventory
+    get_available_recipes_from_inventory = get_available_recipes_from_inventory,
+    get_reagents_from_recipe_id = get_reagents_from_recipe_id
 }
