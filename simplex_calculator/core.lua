@@ -1,4 +1,5 @@
-local helpers = require("simplex_calculator.helpers")
+local helpers = require("helpers")
+
 local function get_pivot_column_index(tableau)
     local lowest_value = math.huge
     local lowest_index = -1

@@ -36,8 +36,7 @@ local all_item_ids = helpers.concat_tables(recipe_ids, herb_ids)
 local auctions_from_full_mock_data = auction_data_browser.get_auctions_from_raw_data(mock_full_auctions_data, "Eluff",
     "LoneWolf")
 local prices_from_full_mock_auctions = auction_data_browser.get_prices_from_ids(all_item_ids,
-    auctions_from_full_mock_data)
-
--- for _, item in ipairs(prices_from_full_mock_auctions) do
+    auctions_from_full_mock_data) -- for _, item in ipairs(prices_from_full_mock_auctions) do
 --     print("Item ID: " .. item.item_id .. ", Buyout Price: " .. item.buyout_price)
 -- end
+(assert(1 == 0), "invalid input");
