@@ -65,16 +65,6 @@ local function has_negative_value_in_last_row(matrix)
     return false
 end
 
-local function parse_user_input(user_input)
-    local tableau_two = {}
-
-    local objective_function = {}
-    for term in user_input[1]:gmatch("([%d%-]+)x(%d)") do
-        table.insert(objective_function, tonumber(term))
-    end
-    table.insert(tableau_two, objective_function)
-end
-
 local function solve_simplex_task(tableau)
     while has_negative_value_in_last_row(tableau) do
         local column_index, row_index = pick_pivot(tableau)
@@ -84,6 +74,5 @@ local function solve_simplex_task(tableau)
 end
 
 return {
-    solve_simplex_task = solve_simplex_task,
-    cleanup_results = helpers.extract_results_from_solved_matrix
+    solve_simplex_task = solve_simplex_task
 }

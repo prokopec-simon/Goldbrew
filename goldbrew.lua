@@ -41,7 +41,7 @@ if cmd_argument == "-DEV" then
     simplex_solver.solve_simplex_task(generated_matrix)
     print("---")
     helpers.print_matrix(generated_matrix)
-    local results = simplex_solver.cleanup_results(generated_matrix, copied_matrix_with_ids)
+    local results = helpers.extract_results_from_solved_matrix(generated_matrix, copied_matrix_with_ids)
 
     print("----------------------")
     for _, result in ipairs(results) do
