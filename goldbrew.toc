@@ -6,4 +6,4 @@
 
 goldbrew.lua
 bag_browser.lua
-alchemy_material_ids.lua
+static_data\alchemy_material_ids.lua
