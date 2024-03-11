@@ -50,20 +50,20 @@ if cmd_argument == "-DEV" then
         print("----------------------")
     end
 
-else
-    local button = CreateFrame("Button", "MyAddonButton", UIParent, "UIPanelButtonTemplate")
-    button:SetPoint("RIGHT")
-    button:SetText("Debug")
+    -- else
+    --     local button = CreateFrame("Button", "MyAddonButton", UIParent, "UIPanelButtonTemplate")
+    --     button:SetPoint("RIGHT")
+    --     button:SetText("Debug")
 
-    local function OnButtonClick()
-        print("yoyo")
-    end
+    --     local function OnButtonClick()
+    --         print("yoyo")
+    --     end
 
-    local function GetBagContents(realm, character)
-        local raw_bag_data = BrotherBags[realm][character]
-        local clean_bag_data = bag_browser.get_bag_contents(raw_bag_data)
-        local herbs_in_bag = bag_browser.get_all_herbs_from_inventory(clean_bag_data)
+    --     local function GetBagContents(realm, character)
+    --         local raw_bag_data = BrotherBags[realm][character]
+    --         local clean_bag_data = bag_browser.get_bag_contents(raw_bag_data)
+    --         local herbs_in_bag = bag_browser.get_all_herbs_from_inventory(clean_bag_data)
 
-    end
-    button:SetScript("OnClick", OnButtonClick)
+    --     end
+    --     button:SetScript("OnClick", OnButtonClick)
 end
