@@ -6,13 +6,14 @@ local auction_data_browser = require("auction_data_browser")
 local helpers = require("helpers")
 local simplex_solver = require("simplex_calculator.core")
 
+-- dev_start
 local cmd_argument = arg[1]
 
 if cmd_argument == "-DEV" then
     local mock_full_bag_data = require("mock_data.mock_bag_full")
     local mock_full_auctions_data = require("mock_data.mock_auctions_full")
-
     local raw_mock_bag_data = mock_full_bag_data["LoneWolf"]["Eluff"]
+
     local clean_bag_data = bag_browser.get_bag_contents(raw_mock_bag_data)
     local herbs_in_bag = bag_browser.get_all_herbs_from_inventory(clean_bag_data)
 
@@ -49,21 +50,7 @@ if cmd_argument == "-DEV" then
         print("Amount:", result[2])
         print("----------------------")
     end
-
-else
-    local button = CreateFrame("Button", "MyAddonButton", UIParent, "UIPanelButtonTemplate")
-    button:SetPoint("RIGHT")
-    button:SetText("Debug")
-
-    local function OnButtonClick()
-        print("yoyo")
-    end
-
-    local function GetBagContents(realm, character)
-        local raw_bag_data = BrotherBags[realm][character]
-        local clean_bag_data = bag_browser.get_bag_contents(raw_bag_data)
-        local herbs_in_bag = bag_browser.get_all_herbs_from_inventory(clean_bag_data)
-
-    end
-    button:SetScript("OnClick", OnButtonClick)
 end
+-- dev_end
+
+-- prod
