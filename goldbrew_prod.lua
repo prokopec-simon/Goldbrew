@@ -1,3 +1,4 @@
+
 local button = CreateFrame("Button", "MyAddonButton", UIParent, "UIPanelButtonTemplate")
 button:SetPoint("RIGHT")
 button:SetText("Debug")

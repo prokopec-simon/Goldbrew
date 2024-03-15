@@ -5,5 +5,3 @@
 ## Notes: 
 
 goldbrew.lua
-bag_browser.lua
-static_data\alchemy_material_ids.lua
