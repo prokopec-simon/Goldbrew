@@ -1,10 +1,10 @@
-
 local button = CreateFrame("Button", "MyAddonButton", UIParent, "UIPanelButtonTemplate")
 button:SetPoint("RIGHT")
 button:SetText("Debug")
 
 local function OnButtonClick()
     print("yoyo")
+    print(GetBagContents("LoneWolf", "Eluff"))
 end
 
 local function GetBagContents(realm, character)

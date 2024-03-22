@@ -28,8 +28,6 @@ function require(mod)
     end
     return loaded[mod]
 end
-
-
 do
 local _ENV = _ENV
 package.preload[ "auction_data_browser" ] = function( ... ) local arg = _G.arg;
@@ -1575,43 +1573,13 @@ local simplex_solver = require("simplex_calculator.core")
 
 
 
-package = {}
-local preload, loaded = {}, {
-    string = string,
-    debug = debug,
-    package = package,
-    _G = _G,
-    io = io,
-    os = os,
-    table = table,
-    math = math,
-    coroutine = coroutine
-}
-package.preload, package.loaded = preload, loaded
-
-function require(mod)
-    if not loaded[mod] then
-        local f = preload[mod]
-        if f == nil then
-            error("module '" .. mod .. [[' not found:
-       no field package.preload[']] .. mod .. "']", 1)
-        end
-        local v = f(mod)
-        if v ~= nil then
-            loaded[mod] = v
-        elseif loaded[mod] == nil then
-            loaded[mod] = true
-        end
-    end
-    return loaded[mod]
-end
-
 local button = CreateFrame("Button", "MyAddonButton", UIParent, "UIPanelButtonTemplate")
 button:SetPoint("RIGHT")
 button:SetText("Debug")
 
 local function OnButtonClick()
     print("yoyo")
+    print(GetBagContents("LoneWolf", "Eluff"))
 end
 
 local function GetBagContents(realm, character)
@@ -1621,6 +1589,5 @@ local function GetBagContents(realm, character)
 
 end
 button:SetScript("OnClick", OnButtonClick)
-
 
 
