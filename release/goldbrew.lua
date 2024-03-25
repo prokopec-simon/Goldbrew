@@ -277,6 +277,13 @@ local function extract_results_from_solved_matrix(solved_matrix, original_matrix
     return indexes_of_result
 end
 
+local function simple_assert(a, b)
+    if a ~= b then
+        print("Values are not matching, test failed")
+        return
+    end
+    print("Test passed")
+end
 return {
     get_item_ids_from_recipes = get_item_ids_from_recipes,
     concat_tables = concat_tables,
@@ -284,7 +291,8 @@ return {
     table_length = table_length,
     get_nth_item = get_nth_item,
     find_price_by_item_id = find_price_by_item_id,
-    extract_results_from_solved_matrix = extract_results_from_solved_matrix
+    extract_results_from_solved_matrix = extract_results_from_solved_matrix,
+    simple_assert = simple_assert
 }
 end
 end
@@ -1578,16 +1586,14 @@ button:SetPoint("RIGHT")
 button:SetText("Debug")
 
 local function OnButtonClick()
-    print("yoyo")
-    print(GetBagContents("LoneWolf", "Eluff"))
-end
-
-local function GetBagContents(realm, character)
-    local raw_bag_data = BrotherBags[realm][character]
+    local raw_bag_data = BrotherBags["LoneWolf"]["Eluff"]
     local clean_bag_data = bag_browser.get_bag_contents(raw_bag_data)
     local herbs_in_bag = bag_browser.get_all_herbs_from_inventory(clean_bag_data)
-
+    for id, count in pairs(herbs_in_bag) do
+        print(id, count)
+    end
 end
+
 button:SetScript("OnClick", OnButtonClick)
 
 

@@ -21,10 +21,7 @@ if cmd_argument == "-DEV" then
         alchemy_recipes)
 
     local recipe_ids = helpers.get_item_ids_from_recipes(available_recipes)
-    local herb_ids = {}
-    for id, count in pairs(herbs_in_bag) do
-        table.insert(herb_ids, id)
-    end
+    local herb_ids = helpers.get_herb_ids_from_bag_data(herbs_in_bag)
 
     local all_item_ids = helpers.concat_tables(recipe_ids, herb_ids)
     local auctions_from_full_mock_data = auction_data_browser.get_auctions_from_raw_data(mock_full_auctions_data,

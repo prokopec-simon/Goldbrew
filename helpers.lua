@@ -65,6 +65,14 @@ local function get_nth_item(table, n)
     return nil, nil
 end
 
+local function get_herb_ids_from_bag_data(bag_herb_data)
+    local herb_ids = {}
+    for id, count in pairs(bag_herb_data) do
+        table.insert(herb_ids, id)
+    end
+    return herb_ids
+end
+
 local function extract_results_from_solved_matrix(solved_matrix, original_matrix_with_ids)
     local indexes_of_result = {}
 
@@ -92,6 +100,7 @@ local function simple_assert(a, b)
     end
     print("Test passed")
 end
+
 return {
     get_item_ids_from_recipes = get_item_ids_from_recipes,
     concat_tables = concat_tables,
@@ -100,5 +109,6 @@ return {
     get_nth_item = get_nth_item,
     find_price_by_item_id = find_price_by_item_id,
     extract_results_from_solved_matrix = extract_results_from_solved_matrix,
-    simple_assert = simple_assert
+    simple_assert = simple_assert,
+    get_herb_ids_from_bag_data = get_herb_ids_from_bag_data
 }
