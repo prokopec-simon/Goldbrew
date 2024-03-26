@@ -3,7 +3,7 @@ button:SetPoint("TOP")
 button:SetText("Debug")
 
 local resultFrame = CreateFrame("Frame", "MyAddonResultFrame", UIParent)
-resultFrame:SetSize(200, 300)
+resultFrame:SetSize(300, 400)
 resultFrame:SetPoint("CENTER")
 resultFrame:SetMovable(true)
 resultFrame:EnableMouse(true)
@@ -60,7 +60,15 @@ local function OnButtonClick()
 
     local resultString = ""
     for _, result in ipairs(results) do
-        resultString = resultString .. result[1] .. ":" .. result[2] .. "x\n"
+        local itemId = result[1]
+        local itemCount = result[2]
+        local itemName, _, itemRarity, _, _, _, _, _, _, itemIcon = GetItemInfo(itemId)
+
+        if itemName then
+            resultString = resultString .. "|T" .. itemIcon .. ":0|t " .. itemName .. ":" .. itemCount .. "x\n"
+        else
+            resultString = resultString .. itemId .. ":" .. itemCount .. "x\n"
+        end
     end
     resultText:SetText(resultString)
 end
