@@ -31,22 +31,23 @@ end
 do
 local _ENV = _ENV
 package.preload[ "auction_data_browser" ] = function( ... ) local arg = _G.arg;
-local function get_prices_from_ids(item_ids, database_data)
-    local items = {}
+local helpers = require("helpers")
+
+local function get_prices_from_ids(item_ids, database_data) -- Should probably return same number of items, what to do if it doesn't? Meaning some prices are not found?
+    local item_ids_with_prices = {}
 
     for item in database_data:gmatch("i[^i]+") do
         local item_id, item_info = item:match("i([^?!]+)[?!](.+)")
         local buyout_price = item_info:match("[^,]+,[^,]+,([^,]+)")
 
-        if has_value(item_ids, tonumber(item_id)) then
-            table.insert(items, {
+        if helpers.table_has_value(item_ids, tonumber(item_id)) then
+            table.insert(item_ids_with_prices, {
                 item_id = item_id,
                 buyout_price = buyout_price
             })
         end
     end
-
-    return items
+    return item_ids_with_prices
 end
 
 local function get_auctions_from_raw_data(auction_data, character_name, realm_name)
@@ -60,16 +61,6 @@ local function get_auctions_from_raw_data(auction_data, character_name, realm_na
     local concatenated_data = table.concat(data, "");
 
     return concatenated_data
-end
-
-function has_value(tab, val)
-    for index, value in ipairs(tab) do
-        if value == val then
-            return true
-        end
-    end
-
-    return false
 end
 
 return {
@@ -131,9 +122,7 @@ do
 local _ENV = _ENV
 package.preload[ "bag_browser" ] = function( ... ) local arg = _G.arg;
 local alchemy_material_ids = require("static_data.alchemy_material_ids")
-local function get_addon_bag_data(realm, character)
-    return BrotherBags[realm][character]
-end
+
 local function get_bag_contents(bag_data)
     local concatenated_bags = {}
     for i = 0, 4 do
@@ -173,17 +162,14 @@ local function get_item_counts_by_ids(item_ids, bags_content)
     return summed_item_amounts_by_id
 end
 local function get_all_herbs_from_inventory(bag_contents)
-    return get_item_counts_by_ids(alchemy_material_ids, bag_contents)
+    local formatted_bag_contents = get_bag_contents(bag_contents)
+    return get_item_counts_by_ids(alchemy_material_ids, formatted_bag_contents)
 end
 return {
     get_all_herbs_from_inventory = get_all_herbs_from_inventory,
     get_bag_contents = get_bag_contents,
-    get_item_counts_by_ids = get_item_counts_by_ids,
-    get_addon_bag_data = get_addon_bag_data
+    get_item_counts_by_ids = get_item_counts_by_ids
 }
--- local function try(string)
---     print(string)
--- end
 end
 end
 
@@ -257,6 +243,14 @@ local function get_nth_item(table, n)
     return nil, nil
 end
 
+local function get_herb_ids_from_bag_data(bag_herb_data)
+    local herb_ids = {}
+    for id, count in pairs(bag_herb_data) do
+        table.insert(herb_ids, id)
+    end
+    return herb_ids
+end
+
 local function extract_results_from_solved_matrix(solved_matrix, original_matrix_with_ids)
     local indexes_of_result = {}
 
@@ -282,8 +276,18 @@ local function simple_assert(a, b)
         print("Values are not matching, test failed")
         return
     end
-    print("Test passed")
 end
+
+local function table_has_value(table_to_browse, value_to_find)
+    for _, value in ipairs(table_to_browse) do
+        if value == value_to_find then
+            return true
+        end
+    end
+
+    return false
+end
+
 return {
     get_item_ids_from_recipes = get_item_ids_from_recipes,
     concat_tables = concat_tables,
@@ -292,7 +296,9 @@ return {
     get_nth_item = get_nth_item,
     find_price_by_item_id = find_price_by_item_id,
     extract_results_from_solved_matrix = extract_results_from_solved_matrix,
-    simple_assert = simple_assert
+    simple_assert = simple_assert,
+    get_herb_ids_from_bag_data = get_herb_ids_from_bag_data,
+    table_has_value = table_has_value
 }
 end
 end
@@ -1582,15 +1588,39 @@ local simplex_solver = require("simplex_calculator.core")
 
 
 local button = CreateFrame("Button", "MyAddonButton", UIParent, "UIPanelButtonTemplate")
-button:SetPoint("RIGHT")
+button:SetPoint("TOP")
 button:SetText("Debug")
 
 local function OnButtonClick()
-    local raw_bag_data = BrotherBags["LoneWolf"]["Eluff"]
-    local clean_bag_data = bag_browser.get_bag_contents(raw_bag_data)
-    local herbs_in_bag = bag_browser.get_all_herbs_from_inventory(clean_bag_data)
-    for id, count in pairs(herbs_in_bag) do
-        print(id, count)
+    local player_name = UnitName("player");
+    local realm_name = string.gsub(GetRealmName(), "%s+", "")
+
+    local raw_bag_data = BrotherBags[realm_name][player_name]
+
+    local auction_data = auction_data_browser.get_auctions_from_raw_data(AuctionDBSaved, player_name, realm_name)
+
+    local herbs_in_bag = bag_browser.get_all_herbs_from_inventory(raw_bag_data)
+
+    local available_recipes = available_recipes_finder.get_available_recipes_from_inventory(herbs_in_bag,
+        alchemy_recipes)
+
+    local recipe_ids = helpers.get_item_ids_from_recipes(available_recipes)
+
+    local herb_ids = helpers.get_herb_ids_from_bag_data(herbs_in_bag)
+    local all_item_ids = helpers.concat_tables(recipe_ids, herb_ids)
+
+    local prices_from_full_mock_auctions = auction_data_browser.get_prices_from_ids(all_item_ids, auction_data)
+
+    local generated_matrix = simplex_generator.construct_simplex_matrix_from_data(herbs_in_bag, available_recipes,
+        prices_from_full_mock_auctions);
+
+    local copied_matrix_with_ids = generated_matrix;
+    generated_matrix = (simplex_generator.strip_tag_data_from_matrix(generated_matrix))
+    simplex_solver.solve_simplex_task(generated_matrix)
+    local results = helpers.extract_results_from_solved_matrix(generated_matrix, copied_matrix_with_ids)
+
+    for _, result in ipairs(results) do
+        print(result[1] .. ":" .. result[2] .. "x")
     end
 end
 

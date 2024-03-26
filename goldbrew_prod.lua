@@ -1,18 +1,22 @@
 local button = CreateFrame("Button", "MyAddonButton", UIParent, "UIPanelButtonTemplate")
-button:SetPoint("RIGHT")
+button:SetPoint("TOP")
 button:SetText("Debug")
 
 local function OnButtonClick()
     local player_name = UnitName("player");
-    local realm_name = GetRealmName()
+    local realm_name = string.gsub(GetRealmName(), "%s+", "")
 
     local raw_bag_data = BrotherBags[realm_name][player_name]
 
-    local auction_data = AuctionDBSaved[realm_name][player_name]
-    local clean_bag_data = bag_browser.get_bag_contents(raw_bag_data)
-    local herbs_in_bag = bag_browser.get_all_herbs_from_inventory(clean_bag_data)
+    local auction_data = auction_data_browser.get_auctions_from_raw_data(AuctionDBSaved, player_name, realm_name)
+
+    local herbs_in_bag = bag_browser.get_all_herbs_from_inventory(raw_bag_data)
+
+    local available_recipes = available_recipes_finder.get_available_recipes_from_inventory(herbs_in_bag,
+        alchemy_recipes)
 
     local recipe_ids = helpers.get_item_ids_from_recipes(available_recipes)
+
     local herb_ids = helpers.get_herb_ids_from_bag_data(herbs_in_bag)
     local all_item_ids = helpers.concat_tables(recipe_ids, herb_ids)
 
@@ -27,9 +31,8 @@ local function OnButtonClick()
     local results = helpers.extract_results_from_solved_matrix(generated_matrix, copied_matrix_with_ids)
 
     for _, result in ipairs(results) do
-        print(result[1] .. ":" .. result[1] .. "x")
+        print(result[1] .. ":" .. result[2] .. "x")
     end
-
 end
 
 button:SetScript("OnClick", OnButtonClick)
