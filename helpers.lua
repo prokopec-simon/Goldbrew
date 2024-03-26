@@ -98,7 +98,6 @@ local function simple_assert(a, b)
         print("Values are not matching, test failed")
         return
     end
-    print("Test passed")
 end
 
 return {

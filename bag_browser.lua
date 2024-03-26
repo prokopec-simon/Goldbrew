@@ -1,7 +1,5 @@
 local alchemy_material_ids = require("static_data.alchemy_material_ids")
-local function get_addon_bag_data(realm, character)
-    return BrotherBags[realm][character]
-end
+
 local function get_bag_contents(bag_data)
     local concatenated_bags = {}
     for i = 0, 4 do
@@ -41,7 +39,8 @@ local function get_item_counts_by_ids(item_ids, bags_content)
     return summed_item_amounts_by_id
 end
 local function get_all_herbs_from_inventory(bag_contents)
-    return get_item_counts_by_ids(alchemy_material_ids, bag_contents)
+    local formatted_bag_contents = get_bag_contents(bag_contents)
+    return get_item_counts_by_ids(alchemy_material_ids, formatted_bag_contents)
 end
 return {
     get_all_herbs_from_inventory = get_all_herbs_from_inventory,
@@ -49,6 +48,3 @@ return {
     get_item_counts_by_ids = get_item_counts_by_ids,
     get_addon_bag_data = get_addon_bag_data
 }
--- local function try(string)
---     print(string)
--- end

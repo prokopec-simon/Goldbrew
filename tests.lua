@@ -1,26 +1,21 @@
 local helpers = require("helpers")
 
--- ============== Inventory testing ==============
+-- ============== Inventory ==============
 local mocked_inventory = require("mock_data.mock_bag_full")
 local bag_browser = require("bag_browser")
 
 -- Parsing mock inventory
 local raw_mock_bag_data = mocked_inventory["LoneWolf"]["Eluff"]
-local clean_bag_data = bag_browser.get_bag_contents(raw_mock_bag_data)
-local herbs_in_bag = bag_browser.get_all_herbs_from_inventory(clean_bag_data)
+local herbs_in_bag = bag_browser.get_all_herbs_from_inventory(raw_mock_bag_data)
 
--- There should be 45 entries in the mock inventory after cleaning
-helpers.simple_assert(#clean_bag_data, 45)
--- The first item should be this: '6948::::::::25:::::::::'
-helpers.simple_assert(clean_bag_data[1], "6948::::::::25:::::::::")
 -- The first pair should represent 40 items of Id 7067
 local firstId, firstCount = next(herbs_in_bag)
 helpers.simple_assert(firstId, 7067)
 helpers.simple_assert(firstCount, 40)
 
--- =================================================
+-- =======================================
 
--- ============== Data cleanup & preparation testing ==============
+-- ============ Data cleanup =============
 local available_recipes_finder = require("available_recipes_finder")
 local alchemy_recipes = require("static_data.alchemy_recipes")
 
@@ -37,4 +32,10 @@ helpers.simple_assert(available_recipes[1].reagents[1].amount, 1)
 -- There should be 22 available recipes
 local recipe_ids = helpers.get_item_ids_from_recipes(available_recipes)
 helpers.simple_assert(#recipe_ids, 22)
--- ==================================================
+
+-- Merging all Ids, 5th Id should be 2457, 13th 3383, total of 36 items
+local all_item_ids = helpers.concat_tables(recipe_ids, herb_ids)
+helpers.simple_assert(all_item_ids[5], 2457)
+helpers.simple_assert(all_item_ids[13], 3383)
+helpers.simple_assert(#all_item_ids, 36)
+-- =======================================

@@ -13,9 +13,10 @@ if cmd_argument == "-DEV" then
     local mock_full_bag_data = require("mock_data.mock_bag_full")
     local mock_full_auctions_data = require("mock_data.mock_auctions_full")
     local raw_mock_bag_data = mock_full_bag_data["LoneWolf"]["Eluff"]
+    local auctions_from_full_mock_data = auction_data_browser.get_auctions_from_raw_data(mock_full_auctions_data,
+        "Eluff", "LoneWolf")
 
-    local clean_bag_data = bag_browser.get_bag_contents(raw_mock_bag_data)
-    local herbs_in_bag = bag_browser.get_all_herbs_from_inventory(clean_bag_data)
+    local herbs_in_bag = bag_browser.get_all_herbs_from_inventory(raw_mock_bag_data)
 
     local available_recipes = available_recipes_finder.get_available_recipes_from_inventory(herbs_in_bag,
         alchemy_recipes)
@@ -24,8 +25,7 @@ if cmd_argument == "-DEV" then
     local herb_ids = helpers.get_herb_ids_from_bag_data(herbs_in_bag)
 
     local all_item_ids = helpers.concat_tables(recipe_ids, herb_ids)
-    local auctions_from_full_mock_data = auction_data_browser.get_auctions_from_raw_data(mock_full_auctions_data,
-        "Eluff", "LoneWolf")
+
     local prices_from_full_mock_auctions = auction_data_browser.get_prices_from_ids(all_item_ids,
         auctions_from_full_mock_data)
 
