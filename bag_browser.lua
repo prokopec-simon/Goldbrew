@@ -45,6 +45,5 @@ end
 return {
     get_all_herbs_from_inventory = get_all_herbs_from_inventory,
     get_bag_contents = get_bag_contents,
-    get_item_counts_by_ids = get_item_counts_by_ids,
-    get_addon_bag_data = get_addon_bag_data
+    get_item_counts_by_ids = get_item_counts_by_ids
 }
