@@ -1,7 +1,3 @@
-local button = CreateFrame("Button", "MyAddonButton", UIParent, "UIPanelButtonTemplate")
-button:SetPoint("TOP")
-button:SetText("Debug")
-
 local resultFrame = CreateFrame("Frame", "MyAddonResultFrame", UIParent)
 resultFrame:SetSize(300, 400)
 resultFrame:SetPoint("CENTER")
@@ -73,4 +69,36 @@ local function OnButtonClick()
     resultText:SetText(resultString)
 end
 
-button:SetScript("OnClick", OnButtonClick)
+local buttonFrame = CreateFrame("Button", "MyAddonMinimapButton", UIParent)
+buttonFrame:SetSize(32, 32)
+buttonFrame:SetHighlightTexture("Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight")
+
+buttonFrame.icon = buttonFrame:CreateTexture(nil, "BACKGROUND")
+buttonFrame.icon:SetAllPoints()
+buttonFrame.icon:SetTexture("Interface\\Icons\\INV_Misc_QuestionMark")
+
+buttonFrame:SetPoint("TOPLEFT", Minimap, "TOPLEFT", 10, -10)
+buttonFrame:SetMovable(true)
+buttonFrame:SetScript("OnMouseDown", function(self, button)
+    if button == "LeftButton" then
+        self:StartMoving()
+    end
+end)
+buttonFrame:SetScript("OnMouseUp", function(self, button)
+    self:StopMovingOrSizing()
+end)
+buttonFrame:SetScript("OnEnter", function(self)
+    GameTooltip:SetOwner(self, "ANCHOR_LEFT")
+    GameTooltip:SetText("Goldbrew")
+    GameTooltip:AddLine("Click to show/hide the results of simplex method.")
+    GameTooltip:Show()
+end)
+buttonFrame:SetScript("OnLeave", function(self)
+    GameTooltip:Hide()
+end)
+
+buttonFrame:SetScript("OnClick", function(self, button)
+    if button == "LeftButton" then
+        OnButtonClick()
+    end
+end)

@@ -1587,9 +1587,7 @@ local simplex_solver = require("simplex_calculator.core")
 
 
 
-local button = CreateFrame("Button", "MyAddonButton", UIParent, "UIPanelButtonTemplate")
-button:SetPoint("TOP")
-button:SetText("Debug")
+local dragging = false -- Variable to track dragging state
 
 local resultFrame = CreateFrame("Frame", "MyAddonResultFrame", UIParent)
 resultFrame:SetSize(300, 400)
@@ -1662,6 +1660,42 @@ local function OnButtonClick()
     resultText:SetText(resultString)
 end
 
-button:SetScript("OnClick", OnButtonClick)
+local buttonFrame = CreateFrame("Button", "MyAddonMinimapButton", UIParent)
+buttonFrame:SetSize(32, 32)
+buttonFrame:SetHighlightTexture("Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight")
+
+buttonFrame.icon = buttonFrame:CreateTexture(nil, "BACKGROUND")
+buttonFrame.icon:SetAllPoints()
+buttonFrame.icon:SetTexture("Interface\\Icons\\INV_Misc_QuestionMark")
+
+buttonFrame:SetPoint("TOPLEFT", Minimap, "TOPLEFT", 10, -10)
+buttonFrame:SetMovable(true)
+buttonFrame:SetScript("OnMouseDown", function(self, button)
+    if button == "LeftButton" then
+        self:StartMoving()
+        dragging = true -- Set dragging to true when mouse down
+
+    end
+end)
+buttonFrame:SetScript("OnMouseUp", function(self, button)
+    self:StopMovingOrSizing()
+    dragging = false -- Set dragging to false when mouse up
+
+end)
+buttonFrame:SetScript("OnEnter", function(self)
+    GameTooltip:SetOwner(self, "ANCHOR_LEFT")
+    GameTooltip:SetText("MyAddon Button")
+    GameTooltip:AddLine("Click to toggle result frame")
+    GameTooltip:Show()
+end)
+buttonFrame:SetScript("OnLeave", function(self)
+    GameTooltip:Hide()
+end)
+
+buttonFrame:SetScript("OnClick", function(self, button)
+    if button == "LeftButton" and not dragging then -- Check if not dragging
+        OnButtonClick()
+    end
+end)
 
 
