@@ -1,19 +1,20 @@
-local function get_prices_from_ids(item_ids, database_data)
-    local items = {}
+local helpers = require("helpers")
+
+local function get_prices_from_ids(item_ids, database_data) -- Should probably return same number of items, what to do if it doesn't? Meaning some prices are not found?
+    local item_ids_with_prices = {}
 
     for item in database_data:gmatch("i[^i]+") do
         local item_id, item_info = item:match("i([^?!]+)[?!](.+)")
         local buyout_price = item_info:match("[^,]+,[^,]+,([^,]+)")
 
-        if has_value(item_ids, tonumber(item_id)) then
-            table.insert(items, {
+        if helpers.table_has_value(item_ids, tonumber(item_id)) then
+            table.insert(item_ids_with_prices, {
                 item_id = item_id,
                 buyout_price = buyout_price
             })
         end
     end
-
-    return items
+    return item_ids_with_prices
 end
 
 local function get_auctions_from_raw_data(auction_data, character_name, realm_name)
@@ -27,16 +28,6 @@ local function get_auctions_from_raw_data(auction_data, character_name, realm_na
     local concatenated_data = table.concat(data, "");
 
     return concatenated_data
-end
-
-function has_value(tab, val)
-    for index, value in ipairs(tab) do
-        if value == val then
-            return true
-        end
-    end
-
-    return false
 end
 
 return {

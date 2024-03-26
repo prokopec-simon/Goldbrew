@@ -100,6 +100,16 @@ local function simple_assert(a, b)
     end
 end
 
+local function table_has_value(table_to_browse, value_to_find)
+    for _, value in ipairs(table_to_browse) do
+        if value == value_to_find then
+            return true
+        end
+    end
+
+    return false
+end
+
 return {
     get_item_ids_from_recipes = get_item_ids_from_recipes,
     concat_tables = concat_tables,
@@ -109,5 +119,6 @@ return {
     find_price_by_item_id = find_price_by_item_id,
     extract_results_from_solved_matrix = extract_results_from_solved_matrix,
     simple_assert = simple_assert,
-    get_herb_ids_from_bag_data = get_herb_ids_from_bag_data
+    get_herb_ids_from_bag_data = get_herb_ids_from_bag_data,
+    table_has_value = table_has_value
 }

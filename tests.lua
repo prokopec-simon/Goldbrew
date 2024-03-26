@@ -12,7 +12,6 @@ local herbs_in_bag = bag_browser.get_all_herbs_from_inventory(raw_mock_bag_data)
 local firstId, firstCount = next(herbs_in_bag)
 helpers.simple_assert(firstId, 7067)
 helpers.simple_assert(firstCount, 40)
-
 -- =======================================
 
 -- ============ Data cleanup =============
