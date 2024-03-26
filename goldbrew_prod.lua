@@ -2,8 +2,36 @@ local button = CreateFrame("Button", "MyAddonButton", UIParent, "UIPanelButtonTe
 button:SetPoint("TOP")
 button:SetText("Debug")
 
+local resultFrame = CreateFrame("Frame", "MyAddonResultFrame", UIParent)
+resultFrame:SetSize(200, 300)
+resultFrame:SetPoint("CENTER")
+resultFrame:SetMovable(true)
+resultFrame:EnableMouse(true)
+resultFrame:SetScript("OnMouseDown", function(self, button)
+    if button == "LeftButton" then
+        self:StartMoving()
+    end
+end)
+resultFrame:SetScript("OnMouseUp", function(self, button)
+    self:StopMovingOrSizing()
+end)
+resultFrame:Hide()
+
+local resultText = resultFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+resultText:SetPoint("TOPLEFT", 10, -10)
+resultText:SetWidth(resultFrame:GetWidth() - 20)
+resultText:SetHeight(resultFrame:GetHeight() - 20)
+resultText:SetJustifyV("TOP")
+resultText:SetJustifyH("LEFT")
+
 local function OnButtonClick()
-    local player_name = UnitName("player");
+    if resultFrame:IsShown() then
+        resultFrame:Hide()
+    else
+        resultFrame:Show()
+    end
+
+    local player_name = UnitName("player")
     local realm_name = string.gsub(GetRealmName(), "%s+", "")
 
     local raw_bag_data = BrotherBags[realm_name][player_name]
@@ -30,9 +58,11 @@ local function OnButtonClick()
     simplex_solver.solve_simplex_task(generated_matrix)
     local results = helpers.extract_results_from_solved_matrix(generated_matrix, copied_matrix_with_ids)
 
+    local resultString = ""
     for _, result in ipairs(results) do
-        print(result[1] .. ":" .. result[2] .. "x")
+        resultString = resultString .. result[1] .. ":" .. result[2] .. "x\n"
     end
+    resultText:SetText(resultString)
 end
 
 button:SetScript("OnClick", OnButtonClick)
