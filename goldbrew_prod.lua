@@ -58,10 +58,20 @@ local function OnButtonClick()
     for _, result in ipairs(results) do
         local itemId = result[1]
         local itemCount = result[2]
+        local reagents = available_recipes_finder.get_reagents_from_recipe_id(itemId, available_recipes)
         local itemName, _, itemRarity, _, _, _, _, _, _, itemIcon = GetItemInfo(itemId)
 
         if itemName then
             resultString = resultString .. "|T" .. itemIcon .. ":0|t " .. itemName .. ":" .. itemCount .. "x\n"
+            if reagents then
+                for _, reagent in ipairs(reagents) do
+                    local reagentName, _, _, _, _, _, _, _, _, reagentIcon = GetItemInfo(reagent.itemId)
+                    if reagentName then
+                        resultString = resultString .. "      |T" .. reagentIcon .. ":0|t " .. reagentName .. ":" ..
+                                           reagent.amount .. "\n"
+                    end
+                end
+            end
         else
             resultString = resultString .. itemId .. ":" .. itemCount .. "x\n"
         end

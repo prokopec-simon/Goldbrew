@@ -1587,8 +1587,6 @@ local simplex_solver = require("simplex_calculator.core")
 
 
 
-local dragging = false -- Variable to track dragging state
-
 local resultFrame = CreateFrame("Frame", "MyAddonResultFrame", UIParent)
 resultFrame:SetSize(300, 400)
 resultFrame:SetPoint("CENTER")
@@ -1649,10 +1647,20 @@ local function OnButtonClick()
     for _, result in ipairs(results) do
         local itemId = result[1]
         local itemCount = result[2]
+        local reagents = available_recipes_finder.get_reagents_from_recipe_id(itemId, available_recipes)
         local itemName, _, itemRarity, _, _, _, _, _, _, itemIcon = GetItemInfo(itemId)
 
         if itemName then
             resultString = resultString .. "|T" .. itemIcon .. ":0|t " .. itemName .. ":" .. itemCount .. "x\n"
+            if reagents then
+                for _, reagent in ipairs(reagents) do
+                    local reagentName, _, _, _, _, _, _, _, _, reagentIcon = GetItemInfo(reagent.itemId)
+                    if reagentName then
+                        resultString = resultString .. "      |T" .. reagentIcon .. ":0|t " .. reagentName .. ":" ..
+                                           reagent.amount .. "\n"
+                    end
+                end
+            end
         else
             resultString = resultString .. itemId .. ":" .. itemCount .. "x\n"
         end
@@ -1673,19 +1681,15 @@ buttonFrame:SetMovable(true)
 buttonFrame:SetScript("OnMouseDown", function(self, button)
     if button == "LeftButton" then
         self:StartMoving()
-        dragging = true -- Set dragging to true when mouse down
-
     end
 end)
 buttonFrame:SetScript("OnMouseUp", function(self, button)
     self:StopMovingOrSizing()
-    dragging = false -- Set dragging to false when mouse up
-
 end)
 buttonFrame:SetScript("OnEnter", function(self)
     GameTooltip:SetOwner(self, "ANCHOR_LEFT")
-    GameTooltip:SetText("MyAddon Button")
-    GameTooltip:AddLine("Click to toggle result frame")
+    GameTooltip:SetText("Goldbrew")
+    GameTooltip:AddLine("Click to show/hide the results of simplex method.")
     GameTooltip:Show()
 end)
 buttonFrame:SetScript("OnLeave", function(self)
@@ -1693,7 +1697,7 @@ buttonFrame:SetScript("OnLeave", function(self)
 end)
 
 buttonFrame:SetScript("OnClick", function(self, button)
-    if button == "LeftButton" and not dragging then -- Check if not dragging
+    if button == "LeftButton" then
         OnButtonClick()
     end
 end)
