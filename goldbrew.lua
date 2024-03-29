@@ -10,8 +10,8 @@ local simplex_solver = require("simplex_calculator.core")
 local cmd_argument = arg[1]
 
 if cmd_argument == "-DEV" then
-    local mock_full_bag_data = require("mock_data.mock_bag_full")
-    local mock_full_auctions_data = require("mock_data.mock_auctions_full")
+    local mock_full_bag_data = require("mock_data.mock_bag_full_2")
+    local mock_full_auctions_data = require("mock_data.mock_auctions_full_2")
     local raw_mock_bag_data = mock_full_bag_data["LoneWolf"]["Eluff"]
     local auctions_from_full_mock_data = auction_data_browser.get_auctions_from_raw_data(mock_full_auctions_data,
         "Eluff", "LoneWolf")
