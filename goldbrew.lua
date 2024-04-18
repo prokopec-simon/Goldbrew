@@ -37,16 +37,27 @@ if cmd_argument == "-DEV" then
     local copied_matrix_with_ids = generated_matrix;
     generated_matrix = (simplex_generator.strip_tag_data_from_matrix(generated_matrix))
     simplex_solver.solve_simplex_task(generated_matrix)
+    for id, count in pairs(herbs_in_bag) do
+        print("Item ID:", id, "Count:", count)
+    end
     print("---")
     helpers.print_matrix(generated_matrix)
     local results = helpers.extract_results_from_solved_matrix(generated_matrix, copied_matrix_with_ids)
 
     print("----------------------")
     for _, result in ipairs(results) do
+
         print("Item ID:", result[1])
+        local reagents = available_recipes_finder.get_reagents_from_recipe_id(result[1], available_recipes)
+        if reagents then
+            for _, reagent in ipairs(reagents) do
+                print(reagent.itemId)
+            end
+        end
         print("Amount:", result[2])
         print("----------------------")
     end
+
 end
 -- dev_end
 
